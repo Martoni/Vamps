@@ -1,2 +1,2 @@
 # Vamps
-Chisel et Lucienne processor
+Chisel Risc-V processor
