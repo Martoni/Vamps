@@ -8,13 +8,25 @@ import chisel3.iotesters
 import chisel3.iotesters.{ChiselFlatSpec, Driver, PeekPokeTester}
 
 class VampsUnitTester(c: Vamps) extends PeekPokeTester(c) {
+
+  def toBinary(i: Int, digits: Int = 8) =
+    String.format("%" + digits + "s", i.toBinaryString).replace(' ', '0')
+
   val LOAD = "0000011"
   val LUI =  "0110111"
   val rsnum = "00001"
   val data = "01"*10
+  val OPADDI = "0010011"
+  val FUNCADDI = "000"
 
+  val IMM = toBinary(4, 12)
+  val rs1num = toBinary(15, 5)
+  val rdnum = toBinary(1, 5)
+
+  poke(c.io.idata, Integer.parseInt(IMM + rs1num + FUNCADDI + rdnum + OPADDI, 2))
+  step(5)
   poke(c.io.idata, Integer.parseInt(data + rsnum + LOAD, 2))
-  step(1)
+  step(5)
   poke(c.io.idata, Integer.parseInt(data + "10000" + LUI, 2))
   step(10)
 }

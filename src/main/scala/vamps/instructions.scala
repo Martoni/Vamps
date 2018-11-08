@@ -59,7 +59,7 @@ object Instructions {
   def CSRRSI             = BitPat("b?????????????????110?????1110011")
   def CSRRCI             = BitPat("b?????????????????111?????1110011")
 
-  def idecode( ifid: UInt) : List[UInt] = {
+  def decode( ifid: UInt) : List[UInt] = {
       ListLookup(ifid,
                              List(N, BR_N  , OP1_X , OP2_X    , OEN_0, OEN_0, ALU_X   , WB_X  ,  REN_0, MEN_0, M_X  , MT_X, CSR.N, N),
                Array(       /* val  |  BR  |  op1  |   op2     |  R1  |  R2  |  ALU    |  wb   | rf   | mem  | mem  | mask | csr | fence.i */
