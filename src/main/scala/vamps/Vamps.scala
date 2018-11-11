@@ -6,7 +6,6 @@ package vamps
 import chisel3._
 import chisel3.util._
 
-
 class Vamps extends Module {
   val io = IO(new Bundle {
     /* instructions */
@@ -34,19 +33,6 @@ class Vamps extends Module {
 
   val PCREG = RegInit(INIT_ADDR.U(32.W))
   io.iaddr := PCREG
-
-  /* OPCODE */
-  val LUI  = "b0110111".U
-  val LOAD = "b0000011".U
-  val CTRL = "b1110011".U
-  /* FUNC3 */
-  val LB  = "b000".U
-  val LH  = "b001".U
-  val LW  = "b010".U
-  val LD  = "b011".U
-  val LBU = "b100".U
-  val LHU = "b101".U
-  val LWU = "b110".U
 
   /* registers file */
   val regfile = RegInit(VecInit(Seq.fill(31)(0.U(32.W))))
@@ -76,9 +62,9 @@ class Vamps extends Module {
 
   /* instruction decode */
   val decoded = Instructions.decode(IFID)
-  val rs1 = RegInit(0.U(32))
-  val rs2 = RegInit(0.U(32))
-  val imm = RegInit(0.U(32))
+  val rs1 = RegInit(0.U(32.W))
+  val rs2 = RegInit(0.U(32.W))
+  val immreg = RegInit(0.U(32.W))
 
   val opcode = Wire(UInt(7.W))
   val func3 = Wire(UInt(3.W))
@@ -103,8 +89,11 @@ class Vamps extends Module {
   when(p_pipe === P_DECODE) {
     rs1 := Mux(rs1num =/= 0.U, regfile(rs1num - 1.U), 0.U)
     rs2 := Mux(rs2num =/= 0.U, regfile(rs2num - 1.U), 0.U)
-    when((opcode === "b0010011".U) && func3 === "b000".U) { // ADDI
-      imm := IFID(31, 20)
+    when(decoded(3) === Instructions.OP2_ITYPE){
+      immreg := Cat(Fill(20, IFID(31)), IFID(31, 20))
+    }
+    when(decoded(3) === Instructions.OP2_UTYPE){
+      immreg := Cat(IFID(31, 12), 0.U(12.W))
     }
   }
 
@@ -112,8 +101,11 @@ class Vamps extends Module {
 
   val ALURes = RegInit(0.U(32.W))
   when(p_pipe === P_EXEC) {
-    when(opcode === "b0010011".U && func3 === "b000".U) { // ADDI
-      ALURes := imm + rs1 
+    when(opcode === VOP.ADDI && func3 === VFUNC3.ADDI) {
+      ALURes := rs1 + immreg
+    }
+    when(opcode === VOP.ADD && func3 === VFUNC3.ADD) {
+      ALURes := rs1 + rs2
     }
   }
 
@@ -121,9 +113,15 @@ class Vamps extends Module {
   }
 
   when(p_pipe === P_WB) {
-    when(opcode === "b0010011".U && func3 === "b000".U) { // ADDI
-      when(rdnum =/= 0.U) {
+    when(rdnum =/= 0.U) {
+      when(opcode === VOP.ADDI && func3 === VFUNC3.ADDI) {
         regfile(rdnum - 1.U) := ALURes
+      }
+      when(opcode === VOP.ADD && func3 === VFUNC3.ADD) {
+        regfile(rdnum - 1.U) := ALURes
+      }
+      when(opcode === VOP.LUI) {
+        regfile(rdnum - 1.U) := immreg
       }
     }
   }

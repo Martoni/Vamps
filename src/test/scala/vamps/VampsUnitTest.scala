@@ -15,20 +15,35 @@ class VampsUnitTester(c: Vamps) extends PeekPokeTester(c) {
   val LOAD = "0000011"
   val LUI =  "0110111"
   val rsnum = "00001"
-  val data = "01"*10
   val OPADDI = "0010011"
+  val OPADD = "0110011"
   val FUNCADDI = "000"
+  val FUNCADD = "000"
 
-  val IMM = toBinary(4, 12)
-  val rs1num = toBinary(15, 5)
-  val rdnum = toBinary(1, 5)
+  var data = "01"*10
+  var imm = toBinary(0x7af, 12)
+  var rs1num = toBinary(15, 5)
+  var rs2num = toBinary(0, 5)
+  var rdnum = toBinary(5, 5)
 
-  poke(c.io.idata, Integer.parseInt(IMM + rs1num + FUNCADDI + rdnum + OPADDI, 2))
+  imm = toBinary(0x1, 20)
+  poke(c.io.idata, Integer.parseInt(imm + rdnum + LUI, 2))
+  step(5)
+  rdnum = toBinary(6, 5)
+  poke(c.io.idata, Integer.parseInt(imm + rs1num + FUNCADDI + rdnum + OPADDI, 2))
+  step(5)
+  imm = toBinary(0xfae, 12)
+  rs1num = toBinary(5, 5)
+  rs2num = toBinary(6, 5)
+  rdnum = toBinary(7, 5)
+  poke(c.io.idata, Integer.parseUnsignedInt(rs2num + rs1num + FUNCADD + rdnum + OPADD, 2))
+  step(5)
+  data = toBinary(0x1cafe, 20)
+  rdnum = toBinary(2, 5)
+  poke(c.io.idata, Integer.parseInt(data + rdnum + LUI, 2))
   step(5)
   poke(c.io.idata, Integer.parseInt(data + rsnum + LOAD, 2))
   step(5)
-  poke(c.io.idata, Integer.parseInt(data + "10000" + LUI, 2))
-  step(10)
 }
 
 /**

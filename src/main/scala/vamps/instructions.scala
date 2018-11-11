@@ -6,6 +6,28 @@ package vamps
 import chisel3._
 import chisel3.util._
 
+object VOP {  // Vamps opcode
+  /* OPCODE */
+  val LUI  = "b0110111".U
+  val ADDI = "b0010011".U
+  val ADD  = "b0110011".U
+
+  val LOAD = "b0000011".U
+  val CTRL = "b1110011".U
+}
+
+object VFUNC3 {
+  /* FUNC3 */
+  val LB  = "b000".U
+  val LH  = "b001".U
+  val LW  = "b010".U
+  val LD  = "b011".U
+  val LBU = "b100".U
+  val LHU = "b101".U
+  val LWU = "b110".U
+  val ADDI= "b000".U
+  val ADD = "b000".U
+}
 
 object Instructions {
 
