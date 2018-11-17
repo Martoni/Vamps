@@ -1,0 +1,63 @@
+[*]
+[*] GTKWave Analyzer v3.3.79 (w)1999-2017 BSI
+[*] Thu Nov 15 20:59:55 2018
+[*]
+[dumpfile] "/home/fabien/myapp/Vamps/test_run_dir/vamps.VampsMain34873972/Vamps.vcd"
+[dumpfile_mtime] "Thu Nov 15 20:59:29 2018"
+[dumpfile_size] 34931
+[savefile] "/home/fabien/myapp/Vamps/config_gtkwave.gtkw"
+[timestart] 5
+[size] 1680 951
+[pos] -1 -1
+*-5.612623 51 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 229
+[signals_width] 182
+[sst_expanded] 1
+[sst_vpaned_height] 261
+@28
+Vamps.clock
+@22
+Vamps.io_daddr[31:0]
+Vamps.io_datai[31:0]
+Vamps.io_datao[31:0]
+Vamps.io_iaddr[31:0]
+Vamps.io_idata[31:0]
+@28
+Vamps.io_rd
+Vamps.io_wr
+Vamps.reset
+Vamps.p_pipe[4:0]
+@23
+Vamps.regfile_0[31:0]
+Vamps.regfile_1[31:0]
+Vamps.regfile_2[31:0]
+Vamps.regfile_3[31:0]
+Vamps.regfile_4[31:0]
+Vamps.regfile_5[31:0]
+Vamps.regfile_6[31:0]
+Vamps.regfile_7[31:0]
+Vamps.regfile_8[31:0]
+Vamps.regfile_9[31:0]
+Vamps.regfile_10[31:0]
+Vamps.regfile_11[31:0]
+Vamps.regfile_12[31:0]
+Vamps.regfile_13[31:0]
+Vamps.regfile_14[31:0]
+Vamps.regfile_15[31:0]
+Vamps.regfile_16[31:0]
+Vamps.regfile_17[31:0]
+Vamps.regfile_18[31:0]
+Vamps.regfile_19[31:0]
+Vamps.regfile_20[31:0]
+Vamps.regfile_21[31:0]
+Vamps.regfile_22[31:0]
+Vamps.regfile_23[31:0]
+Vamps.regfile_24[31:0]
+Vamps.regfile_25[31:0]
+Vamps.regfile_26[31:0]
+Vamps.regfile_27[31:0]
+Vamps.regfile_28[31:0]
+Vamps.regfile_29[31:0]
+Vamps.regfile_30[31:0]
+[pattern_trace] 1
+[pattern_trace] 0

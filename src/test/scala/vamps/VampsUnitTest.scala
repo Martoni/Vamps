@@ -2,48 +2,34 @@
 
 package vamps
 
+// scala imports
+import scala.collection.mutable.ListBuffer
+import scala.io.Source // for files 
 import java.io.File
 
+// chisel tester imports
 import chisel3.iotesters
 import chisel3.iotesters.{ChiselFlatSpec, Driver, PeekPokeTester}
 
 class VampsUnitTester(c: Vamps) extends PeekPokeTester(c) {
 
+  val hex_asm_path = "src/firmware/vamps.hex"
+
   def toBinary(i: Int, digits: Int = 8) =
     String.format("%" + digits + "s", i.toBinaryString).replace(' ', '0')
 
-  val LOAD = "0000011"
-  val LUI =  "0110111"
-  val rsnum = "00001"
-  val OPADDI = "0010011"
-  val OPADD = "0110011"
-  val FUNCADDI = "000"
-  val FUNCADD = "000"
+  
+  var irom = new ListBuffer[Int]()
+  for(line <- Source.fromFile(hex_asm_path).getLines){
+    irom += Integer.parseUnsignedInt(line, 16)
+  }
 
-  var data = "01"*10
-  var imm = toBinary(0x7af, 12)
-  var rs1num = toBinary(15, 5)
-  var rs2num = toBinary(0, 5)
-  var rdnum = toBinary(5, 5)
+  var i = 0;
+  for(i <- 0 until irom.length){
+    poke(c.io.idata, irom(peek(c.io.iaddr).toInt/4))
+    step(5)
+  }
 
-  imm = toBinary(0x1, 20)
-  poke(c.io.idata, Integer.parseInt(imm + rdnum + LUI, 2))
-  step(5)
-  rdnum = toBinary(6, 5)
-  poke(c.io.idata, Integer.parseInt(imm + rs1num + FUNCADDI + rdnum + OPADDI, 2))
-  step(5)
-  imm = toBinary(0xfae, 12)
-  rs1num = toBinary(5, 5)
-  rs2num = toBinary(6, 5)
-  rdnum = toBinary(7, 5)
-  poke(c.io.idata, Integer.parseUnsignedInt(rs2num + rs1num + FUNCADD + rdnum + OPADD, 2))
-  step(5)
-  data = toBinary(0x1cafe, 20)
-  rdnum = toBinary(2, 5)
-  poke(c.io.idata, Integer.parseInt(data + rdnum + LUI, 2))
-  step(5)
-  poke(c.io.idata, Integer.parseInt(data + rsnum + LOAD, 2))
-  step(5)
 }
 
 /**
