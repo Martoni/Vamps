@@ -25,7 +25,9 @@ class VampsUnitTester(c: Vamps) extends PeekPokeTester(c) {
   }
 
   var i = 0;
-  for(i <- 0 until irom.length){
+  for(i <- 0 until 7){
+	val test = peek(c.io.iaddr)/4
+	println(test.toString)
     poke(c.io.idata, irom(peek(c.io.iaddr).toInt/4))
     step(5)
   }

@@ -57,14 +57,13 @@ class Vamps extends Module {
 
   when(p_pipe === P_FETCH) {
     IFID := io.idata
-    PCREG := PCREG + 4.U
   }
 
   /* instruction decode */
   val decoded = Instructions.decode(IFID)
   val rs1 = RegInit(0.U(32.W))
   val rs2 = RegInit(0.U(32.W))
-  val immreg = RegInit(0.U(32.W))
+  val immreg = RegInit(0.S(32.W))
 
   val opcode = Wire(UInt(7.W))
   val func3 = Wire(UInt(3.W))
@@ -90,22 +89,32 @@ class Vamps extends Module {
     rs1 := Mux(rs1num =/= 0.U, regfile(rs1num - 1.U), 0.U)
     rs2 := Mux(rs2num =/= 0.U, regfile(rs2num - 1.U), 0.U)
     when(decoded(3) === Instructions.OP2_ITYPE){
-      immreg := Cat(Fill(20, IFID(31)), IFID(31, 20))
+      immreg := Cat(Fill(20, IFID(31)), IFID(31, 20)).asSInt
     }
-    when(decoded(3) === Instructions.OP2_UTYPE){
-      immreg := Cat(IFID(31, 12), 0.U(12.W))
+    when(decoded(3) === Instructions.OP2_UTYPE) {
+      immreg := Cat(IFID(31, 12), 0.U(12.W)).asSInt
     }
+	when(decoded(3) === Instructions.OP2_UJTYPE) {
+	  immreg := Cat(Fill(12, IFID(31)), IFID(19, 12), IFID(20), IFID(30, 21), 0.U(1.W)).asSInt
+	}
   }
 
   /* Execute stage */
 
-  val ALURes = RegInit(0.U(32.W))
+  val ALURes = RegInit(0.S(32.W))
   when(p_pipe === P_EXEC) {
     when(opcode === VOP.ADDI && func3 === VFUNC3.ADDI) {
-      ALURes := rs1 + immreg
+      ALURes := rs1.asSInt + immreg
     }
     when(opcode === VOP.ADD && func3 === VFUNC3.ADD) {
-      ALURes := rs1 + rs2
+      ALURes := (rs1 + rs2).asSInt
+    }
+
+    PCREG := PCREG + 4.U
+    when(opcode === VOP.AUIPC ||
+         opcode === VOP.JAL) {
+      PCREG  := (PCREG.asSInt + immreg).asUInt
+      ALURes := PCREG.asSInt + immreg
     }
   }
 
@@ -115,13 +124,16 @@ class Vamps extends Module {
   when(p_pipe === P_WB) {
     when(rdnum =/= 0.U) {
       when(opcode === VOP.ADDI && func3 === VFUNC3.ADDI) {
-        regfile(rdnum - 1.U) := ALURes
+        regfile(rdnum - 1.U) := ALURes.asUInt
       }
       when(opcode === VOP.ADD && func3 === VFUNC3.ADD) {
-        regfile(rdnum - 1.U) := ALURes
+        regfile(rdnum - 1.U) := ALURes.asUInt
       }
+      when(opcode === VOP.AUIPC) {
+		regfile(rdnum - 1.U) := ALURes.asUInt
+	  }
       when(opcode === VOP.LUI) {
-        regfile(rdnum - 1.U) := immreg
+        regfile(rdnum - 1.U) := immreg.asUInt
       }
     }
   }

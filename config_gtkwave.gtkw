@@ -1,21 +1,22 @@
 [*]
 [*] GTKWave Analyzer v3.3.79 (w)1999-2017 BSI
-[*] Thu Nov 15 20:59:55 2018
+[*] Sun Nov 18 20:15:07 2018
 [*]
 [dumpfile] "/home/fabien/myapp/Vamps/test_run_dir/vamps.VampsMain34873972/Vamps.vcd"
-[dumpfile_mtime] "Thu Nov 15 20:59:29 2018"
-[dumpfile_size] 34931
+[dumpfile_mtime] "Sun Nov 18 20:14:49 2018"
+[dumpfile_size] 46916
 [savefile] "/home/fabien/myapp/Vamps/config_gtkwave.gtkw"
-[timestart] 5
+[timestart] 0
 [size] 1680 951
 [pos] -1 -1
-*-5.612623 51 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.031299 221 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [sst_width] 229
 [signals_width] 182
 [sst_expanded] 1
 [sst_vpaned_height] 261
 @28
 Vamps.clock
+Vamps.reset
 @22
 Vamps.io_daddr[31:0]
 Vamps.io_datai[31:0]
@@ -25,9 +26,14 @@ Vamps.io_idata[31:0]
 @28
 Vamps.io_rd
 Vamps.io_wr
-Vamps.reset
-Vamps.p_pipe[4:0]
 @23
+Vamps.opcode[6:0]
+@22
+Vamps.PCREG[31:0]
+Vamps.p_pipe[4:0]
+@420
+Vamps.immreg[31:0]
+@22
 Vamps.regfile_0[31:0]
 Vamps.regfile_1[31:0]
 Vamps.regfile_2[31:0]

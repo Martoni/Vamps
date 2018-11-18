@@ -9,8 +9,10 @@ import chisel3.util._
 object VOP {  // Vamps opcode
   /* OPCODE */
   val LUI  = "b0110111".U
+  val AUIPC= "b0010111".U
   val ADDI = "b0010011".U
   val ADD  = "b0110011".U
+  val JAL  = "b1101111".U
 
   val LOAD = "b0000011".U
   val CTRL = "b1110011".U
