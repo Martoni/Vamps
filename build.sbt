@@ -42,8 +42,20 @@ resolvers ++= Seq(
 // Provide a managed dependency on X if -DXVersion="" is supplied on the command line.
 val defaultVersions = Map(
   "chisel3" -> "3.1.+",
-  "chisel-iotesters" -> "1.2.5+"
+  "chisel-iotesters" -> "1.2.5+",
   )
+
+// copy-paste from https://github.com/freechipsproject/chisel-testers/blob/master/build.sbt
+// Provide a managed dependency on X if -DXVersion="" is supplied on the command line.
+// The following are the default development versions, not the "release" versions.
+//val defaultVersions = Map(
+//  "chisel3" -> "3.2-SNAPSHOT",
+//  "chisel-iotesters" -> "1.2.5+",
+//  "firrtl" -> "1.2-SNAPSHOT",
+//  "firrtl-interpreter" -> "1.2-SNAPSHOT",
+//  "treadle" -> "1.1-SNAPSHOT"
+//)
+
 
 libraryDependencies ++= Seq("chisel3","chisel-iotesters").map {
   dep: String => "edu.berkeley.cs" %% dep % sys.props.getOrElse(dep + "Version", defaultVersions(dep)) }

@@ -20,13 +20,6 @@ class Vamps extends Module {
     val wr = Output(Bool())
     val rd = Output(Bool())
 
-    val debugIFID = Output(UInt(32.W))
-    val debugrs1 = Output(UInt(32.W))
-    val debugrs2 = Output(UInt(32.W))
-    val debugrs1num = Output(UInt(5.W))
-    val debugrs2num = Output(UInt(5.W))
-    val debugrdnum = Output(UInt(5.W))
-    val debugpseudo_pipe = Output(UInt(5.W))
   })
 
   val INIT_ADDR = 0
@@ -49,11 +42,9 @@ class Vamps extends Module {
   /* Pseudo pipe declaration */
   val p_pipe = RegInit(1.U(5.W))
   p_pipe := Cat(p_pipe(3, 0), p_pipe(4))
-  io.debugpseudo_pipe := p_pipe
 
   /* Fetch */
   val IFID = RegInit(0.U(32.W))
-  io.debugIFID := IFID
 
   when(p_pipe === P_FETCH) {
     IFID := io.idata
@@ -72,18 +63,12 @@ class Vamps extends Module {
   val rs2num = Wire(UInt(5.W))
   val rdnum = Wire(UInt(5.W))
 
-  io.debugrs1num := rs1num
-  io.debugrs2num := rs2num
   rs1num := IFID(19, 15)
   rs2num := IFID(24, 20)
   rdnum  := IFID(11, 7)
   opcode := IFID(6, 0)
   func3  := IFID(14, 12)
   func7  := IFID(31, 25)
-
-  io.debugrs1 := rs1
-  io.debugrs2 := rs2
-  io.debugrdnum := rdnum
 
   when(p_pipe === P_DECODE) {
     rs1 := Mux(rs1num =/= 0.U, regfile(rs1num - 1.U), 0.U)
