@@ -17,3 +17,11 @@ sbt 'test:runMain vamps.MiVampsMain --backend-name verilator'
 To test it :
 sbt 'test:runMain vamps.MiVampsMain --generate-vcd-output on'
 
+```bash
+$ sbt 'test:runMain vamps.VampsMain --generate-vcd-output on'
+```
+
+With verilator, and generate verilog sources:
+```bash
+$ sbt 'test:runMain vamps.VampsMain --backend-name verilator'
+```
